@@ -166,7 +166,7 @@ The rule implementation will call this partial and pass it the following four ar
      code.
 *    `cc_toolchain`: The C++ toolchain (`CcToolchainInfo` provider) to use when compiling the
      stamp code.
-*    `binary`: The `File` object representing the binary being linked.
+*    `binary_path`: The short path of the binary being linked.
 
 The partial should return a `CcLinkingContext` containing the data (such as object files) to be
 linked into the binary, or `None` if nothing should be linked into the binary.

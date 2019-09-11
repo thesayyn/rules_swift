@@ -141,10 +141,9 @@ def _default_linker_opts(
     linkopts.extend([
         "-F{}".format(platform_framework_dir),
         "-L{}".format(swift_lib_dir),
-        # TODO(b/112000244): These should get added by the C++ Skylark API, but we're using the
-        # "c++-link-executable" action right now instead of "objc-executable" because the latter
-        # requires additional variables not provided by cc_common. Figure out how to handle this
-        # correctly.
+        # TODO(b/112000244): These should get added by `cc_common.link`, but it only supports the
+        # "c++-link-executable" action right now and not "objc-executable", so we add them manually
+        # until that is fixed.
         "-ObjC",
         "-Wl,-objc_abi_version,2",
     ])
@@ -157,8 +156,10 @@ def _default_linker_opts(
     # directory), so test binaries need to have that directory explicitly added to
     # their rpaths.
     if is_test:
-        linkopts.append("-Wl,-rpath,{}".format(platform_framework_dir))
-        linkopts.append("-L{}".format(_swift_developer_lib_dir(platform_framework_dir)))
+        linkopts.extend([
+            "-Wl,-rpath,{}".format(platform_framework_dir),
+            "-L{}".format(_swift_developer_lib_dir(platform_framework_dir)),
+        ])
 
     return linkopts
 
